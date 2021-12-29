@@ -11,9 +11,9 @@
 # echo '*/5 * * * * /root/weather_ssid.sh' >> /etc/crontabs/root && /etc/init.d/cron restart
 
 if iwinfo phy0 assoclist | head | grep "No station connected"; then
-        wget http://wttr.in/Prague?format="%c+%t+%w+%m" -O weather.txt 2>/dev/null
-        SSID=`head weather.txt 2>/dev/null 3>/dev/null || echo "weather station: offline"`
-        rm weather.txt
+        wget http://wttr.in/Prague?format="%c+%t+%w+%m" -O /tmp/weather.txt 2>/dev/null
+        SSID=`head /tmp/weather.txt 2>/dev/null 3>/dev/null || echo "weather station: offline"`
+        rm /tmp/weather.txt
         uci set wireless.@wifi-iface[0].ssid="$SSID"
         uci commit wireless
         wifi up
