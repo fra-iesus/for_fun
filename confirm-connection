@@ -1,0 +1,35 @@
+#!/bin/sh
+
+# confirm the WiFi connection of the devices - for OpenWRT
+#
+# I'm personally using this for the detection of myself on
+# the sitemap of my household for my friends: whether I'm
+# in the garage, in the basement etc. - just to know where
+# to find me at this moment :-)
+#
+# The script itself is placed under the /www/cgi-bin/
+# location (eg. /www/cgi-bin/custom/is-jack-there)
+# There is another script running on the other machine
+# asking the particular APs about the presence of the
+# devices. Based on the response, the probability of
+# my presence is displayed on the map (on the color scale
+# from red to green).
+#
+# TODO: change to the loop through the array of the devices
+
+count=0
+for interface in `iwinfo | grep ESSID | cut -f 1 -s -d" "`
+do
+  maclist=`iwinfo $interface assoclist | grep dBm | cut -f 1 -s -d" "`
+  for mac in $maclist
+  do
+    if [ $mac == 'target MAC address' ]; then
+      var=$((count++))
+    fi
+    if [ $mac == 'another target MAC address' ]; then
+      var=$((count++))
+    fi
+    ... list of another devices (phones, watches, laptops etc.)
+  done
+done
+echo "$count"
